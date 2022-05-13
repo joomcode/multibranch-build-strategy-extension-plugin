@@ -46,7 +46,7 @@ import jenkins.scm.api.SCMSourceOwner;
 
 public abstract class BranchBuildStrategyExtension extends BranchBuildStrategy{
 
-		private final static int HASH_LENGTH = 40;
+	private final static int HASH_LENGTH = 40;
 		private static final Logger logger = Logger.getLogger(BranchBuildStrategyExtension.class.getName());
 	
 	   protected SCMFileSystem   buildSCMFileSystem(SCMSource source, SCMHead head, SCMRevision currRevision,SCM scm,SCMSourceOwner owner) throws Exception{

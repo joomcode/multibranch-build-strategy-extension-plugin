@@ -31,6 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import hudson.model.TaskListener;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -67,7 +69,12 @@ public class IncludeRegionBranchBuildStrategy extends BranchBuildStrategyExtensi
      * @return true if  there is at least one affected file in the include regions 
      */
     @Override
-    public boolean isAutomaticBuild(SCMSource source, SCMHead head, SCMRevision currRevision, SCMRevision prevRevision) {
+    public boolean isAutomaticBuild(@NonNull SCMSource source,
+                                    @NonNull SCMHead head,
+                                    @NonNull SCMRevision currRevision,
+                                    SCMRevision lastBuiltRevision,
+                                    SCMRevision lastSeenRevision,
+                                    @NonNull TaskListener listener) {
         try {
         	
         	 List<String> includedRegionsList = Arrays.stream(
@@ -99,7 +106,7 @@ public class IncludeRegionBranchBuildStrategy extends BranchBuildStrategyExtensi
                 return true;
             }
             
-            List<String> pathesList = new ArrayList<String>(collectAllAffectedFiles(getGitChangeSetListFromPrevious(fileSystem, head, prevRevision)));
+            List<String> pathesList = new ArrayList<String>(collectAllAffectedFiles(getGitChangeSetListFromPrevious(fileSystem, head, lastBuiltRevision)));
             // If there is match for at least one file run the build
             for (String filePath : pathesList){
     			for(String includedRegion:includedRegionsList) {    				
